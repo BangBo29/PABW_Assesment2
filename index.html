@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Permohonan Informasi</title>
+<style>
+    /* Style untuk tabel */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    table th {
+        background-color: #f2f2f2;
+    }
+    
+    /* Style untuk tombol Hapus */
+    button {
+        background-color: #f44336;
+        color: white;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #d32f2f;
+    }
+    </style>
+</head>
+<body>
+
+<table id="data-table">
+  <thead>
+    <tr>
+      <th>ID Form</th>
+      <th>NIK</th>
+      <th>Tanggal</th>
+      <th>Tujuan</th>
+      <th>Deskripsi</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Data akan ditambahkan secara dinamis menggunakan JavaScript -->
+  </tbody>
+</table>
+
+<script>
+// Membuat panggilan AJAX untuk mengambil data dari server
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "koneksi.php", true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        // Mengubah respons JSON menjadi objek JavaScript
+        var data = JSON.parse(xhr.responseText);
+        // Proses dan tampilkan data ke dalam tabel
+        var table = document.getElementById("data-table");
+        for (var i = 0; i < data.length; i++) {
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            cell1.innerHTML = data[i].id_form;
+            cell2.innerHTML = data[i].nik;
+            cell3.innerHTML = data[i].tanggal;
+            cell4.innerHTML = data[i].tujuan;
+            cell5.innerHTML = data[i].deskripsi;
+            cell6.innerHTML = '<button onclick="hapusData(' + data[i].id_form + ')">Hapus</button>';
+        }
+    }
+};
+xhr.send();
+
+// Fungsi untuk menghapus data dengan AJAX
+function hapusData(idForm) {
+    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "koneksi.php?id_form=" + idForm, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Proses respons jika diperlukan
+                // Contoh: memperbarui tampilan setelah penghapusan data
+                // Misalnya, reload halaman setelah penghapusan data:
+                location.reload();
+            }
+        };
+        xhr.send();
+    }
+}
+</script>
+
+</body>
+</html>
